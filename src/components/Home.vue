@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container main">
        <div class="row">
            <div class="col-md-8 mx-auto">
                <h3 class="text-white fw-bold">Weather Application</h3>
@@ -16,7 +16,7 @@
                       </div>
 
                       <div class="my-3">
-                      <h3 class="date">Monday 20 January 2020</h3>
+                      <h3 class="date"> {{ dateTime }}</h3>
                       </div>
                    
 
@@ -36,7 +36,8 @@
 </template>
 
 <script>
-import { ref } from "vue"
+import moment from "moment";
+import { computed, ref } from "vue"
 
     export default {
         setup(){
@@ -49,14 +50,18 @@ import { ref } from "vue"
                   fetch(`${url_base.value}weather?q=${query.value}&units=metric&APPID=${api_key.value}`)
                   .then(res=>{
                       return res.json();
-                  }).then(setResults)
+                  }).then(setResults);
+                  query.value=''
             }
             
             let setResults=(results)=>{
                  weather.value=results;
                  console.log(weather.value)
             }
-            return {query,api_key,url_base,weather,fetchWeather,setResults}
+            let dateTime=computed((value)=>{
+               return moment(value).format("dddd D MMMM YYYY");
+            })
+            return {query,api_key,url_base,weather,fetchWeather,setResults,dateTime}
         }
     }
 </script>
